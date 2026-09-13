@@ -2,10 +2,9 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<title>Photo Battle Game</title>
+<title>Photo Battle Arena</title>
 
 <style>
 *{
@@ -17,35 +16,35 @@ content="width=device-width,initial-scale=1.0,user-scalable=no">
 
 body{
   overflow:hidden;
-  background:#080b10;
+  background:#071018;
   font-family:Arial,sans-serif;
-  color:white;
 }
 
 #menu{
   position:fixed;
   inset:0;
-  z-index:50;
+  z-index:100;
   display:flex;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
   gap:18px;
+  color:white;
   text-align:center;
   background:
-    radial-gradient(circle at top,#244d78,#07101b 65%);
+  radial-gradient(circle at 50% 20%,#28567a,#071018 70%);
 }
 
 #menu h1{
-  font-size:32px;
-  text-shadow:0 0 15px #00d9ff;
+  font-size:34px;
+  text-shadow:0 0 18px #00d9ff;
 }
 
 #menu p{
   font-size:17px;
 }
 
-.upload{
+#photoButton{
   background:#087cff;
   padding:15px 25px;
   border-radius:12px;
@@ -53,11 +52,11 @@ body{
   font-weight:bold;
 }
 
-.upload input{
+#photoInput{
   display:none;
 }
 
-#start{
+#startButton{
   border:0;
   border-radius:12px;
   padding:15px 35px;
@@ -74,9 +73,9 @@ body{
 }
 
 canvas{
+  display:block;
   width:100%;
   height:100%;
-  display:block;
 }
 
 .top{
@@ -84,14 +83,15 @@ canvas{
   top:10px;
   left:0;
   width:100%;
-  z-index:10;
   display:flex;
   justify-content:space-between;
   padding:0 12px;
+  z-index:20;
 }
 
-.box{
-  background:rgba(0,0,0,.55);
+.info{
+  color:white;
+  background:rgba(0,0,0,.65);
   padding:8px 13px;
   border-radius:10px;
   font-size:19px;
@@ -100,14 +100,14 @@ canvas{
 
 .controls{
   position:absolute;
-  bottom:18px;
   left:0;
+  bottom:18px;
   width:100%;
+  padding:0 20px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:0 20px;
-  z-index:20;
+  z-index:30;
 }
 
 .move{
@@ -120,36 +120,37 @@ canvas{
   height:65px;
   border-radius:50%;
   border:2px solid white;
-  background:rgba(0,0,0,.6);
+  background:rgba(0,0,0,.65);
   color:white;
-  font-size:27px;
+  font-size:28px;
 }
 
 #shoot{
   width:85px;
   height:85px;
-  background:rgba(210,25,25,.9);
-  font-size:31px;
+  background:#d82121;
+  font-size:30px;
 }
 
-#over{
+#gameOver{
   display:none;
   position:absolute;
   inset:0;
-  z-index:40;
-  background:rgba(0,0,0,.85);
+  z-index:90;
   align-items:center;
   justify-content:center;
   flex-direction:column;
   gap:18px;
+  color:white;
   text-align:center;
+  background:rgba(0,0,0,.86);
 }
 
-#over h2{
+#gameOver h2{
   font-size:40px;
 }
 
-#again{
+#restart{
   padding:14px 30px;
   border:0;
   border-radius:12px;
@@ -163,50 +164,75 @@ canvas{
 
 <body>
 
+<!-- MENU -->
+
 <div id="menu">
 
   <h1>🎮 PHOTO BATTLE</h1>
 
-  <p>अपना फोटो लगाकर अपना कैरेक्टर बनाएं</p>
+  <p>अपना फोटो लगाकर पूरा कैरेक्टर बनाएं</p>
 
-  <label class="upload">
-    📷 फोटो चुनें
-    <input id="photo" type="file" accept="image/*">
+  <label id="photoButton">
+    📷 अपना फोटो चुनें
+    <input id="photoInput" type="file" accept="image/*">
   </label>
 
-  <button id="start">▶ GAME START</button>
+  <button id="startButton">
+    ▶ गेम शुरू करें
+  </button>
 
 </div>
 
 
+<!-- GAME -->
+
 <div id="game">
 
   <div class="top">
-    <div class="box">❤️ <span id="hp">100</span></div>
-    <div class="box">🏆 <span id="score">0</span></div>
+
+    <div class="info">
+      ❤️ <span id="health">100</span>
+    </div>
+
+    <div class="info">
+      🏆 <span id="score">0</span>
+    </div>
+
   </div>
 
+
   <canvas id="canvas"></canvas>
+
 
   <div class="controls">
 
     <div class="move">
+
       <button class="btn" id="left">◀</button>
+
       <button class="btn" id="right">▶</button>
+
     </div>
 
-    <button class="btn" id="shoot">🔫</button>
+    <button class="btn" id="shoot">
+      🔫
+    </button>
 
   </div>
 
 
-  <div id="over">
+  <div id="gameOver">
 
     <h2>💀 GAME OVER</h2>
 
-    <p>आपका स्कोर: <b id="final">0</b></p>
+    <p>
+      आपका स्कोर:
+      <b id="finalScore">0</b>
+    </p>
 
-    <button id="again">🔄 फिर से खेलें</button>
+    <button id="restart">
+      🔄 फिर से खेलें
+    </button>
 
   </div>
 
@@ -228,43 +254,45 @@ const game =
 document.getElementById("game");
 
 const photoInput =
-document.getElementById("photo");
+document.getElementById("photoInput");
 
 const startButton =
-document.getElementById("start");
+document.getElementById("startButton");
 
-const hpText =
-document.getElementById("hp");
+const healthText =
+document.getElementById("health");
 
 const scoreText =
 document.getElementById("score");
 
-const over =
-document.getElementById("over");
+const gameOver =
+document.getElementById("gameOver");
 
 const finalScore =
-document.getElementById("final");
+document.getElementById("finalScore");
 
-let image=null;
 
-let player;
+let photo=null;
 
-let bullets=[];
+let player=null;
+
 let enemies=[];
+let bullets=[];
 let particles=[];
 
 let score=0;
+
 let running=false;
 
-let left=false;
-let right=false;
+let leftPressed=false;
+let rightPressed=false;
 
 let enemyTimer;
 
 
-/* -------------------------
+/* =====================
    CANVAS
-------------------------- */
+===================== */
 
 function resize(){
 
@@ -274,9 +302,10 @@ function resize(){
   if(player){
 
     player.y=
-      canvas.height-190;
+      canvas.height-205;
 
   }
+
 }
 
 window.addEventListener(
@@ -285,9 +314,9 @@ window.addEventListener(
 );
 
 
-/* -------------------------
+/* =====================
    PHOTO
-------------------------- */
+===================== */
 
 photoInput.addEventListener(
   "change",
@@ -302,9 +331,9 @@ photoInput.addEventListener(
 
     reader.onload=function(e){
 
-      image=new Image();
+      photo=new Image();
 
-      image.src=e.target.result;
+      photo.src=e.target.result;
 
     };
 
@@ -314,204 +343,244 @@ photoInput.addEventListener(
 );
 
 
-/* -------------------------
-   START GAME
-------------------------- */
+/* =====================
+   START
+===================== */
 
-startButton.onclick=
-function(){
+startButton.onclick=function(){
 
   resize();
 
   menu.style.display="none";
+
   game.style.display="block";
-  over.style.display="none";
+
+  gameOver.style.display="none";
+
 
   player={
 
-    x:canvas.width/2-38,
+    x:
+      canvas.width/2-35,
 
-    y:canvas.height-190,
+    y:
+      canvas.height-205,
 
-    width:76,
+    width:70,
 
-    height:105,
+    height:150,
 
-    speed:7,
+    speed:6,
 
-    health:100,
-
-    direction:1
+    health:100
 
   };
 
-  bullets=[];
+
   enemies=[];
+  bullets=[];
   particles=[];
 
   score=0;
 
   running=true;
 
+
   clearInterval(enemyTimer);
 
   enemyTimer=
     setInterval(
       createEnemy,
-      900
+      1000
     );
+
 
   requestAnimationFrame(loop);
 
 };
 
 
-/* -------------------------
-   DRAW PLAYER
-------------------------- */
+/* =====================
+   PLAYER
+===================== */
 
 function drawPlayer(){
 
+  const x=player.x;
+  const y=player.y;
+
+
   /*
-    फोटो को शरीर के ऊपर रखा जाता है।
-    नीचे हाथ और बंदूक बनाई जाती है।
+    HEAD / PHOTO
   */
 
-  if(image && image.complete){
+  if(photo && photo.complete){
 
     ctx.save();
 
     ctx.beginPath();
 
-    ctx.roundRect(
-      player.x,
-      player.y,
-      player.width,
-      player.height-15,
-      18
+    ctx.arc(
+      x+35,
+      y+30,
+      29,
+      0,
+      Math.PI*2
     );
 
     ctx.clip();
 
     ctx.drawImage(
-      image,
-      player.x,
-      player.y,
-      player.width,
-      player.height-15
+      photo,
+      x+5,
+      y,
+      60,
+      60
     );
 
     ctx.restore();
 
   }else{
 
-    /* फोटो नहीं होने पर टेस्ट कैरेक्टर */
+    /* TEST HEAD */
 
-    ctx.fillStyle="#16c784";
+    ctx.fillStyle="#d9a078";
 
     ctx.beginPath();
 
     ctx.arc(
-      player.x+38,
-      player.y+35,
-      35,
+      x+35,
+      y+30,
+      28,
       0,
       Math.PI*2
     );
 
     ctx.fill();
 
-    ctx.fillStyle="#15915e";
+    ctx.fillStyle="#222";
 
-    ctx.fillRect(
-      player.x+10,
-      player.y+60,
-      56,
-      42
+    ctx.beginPath();
+
+    ctx.arc(
+      x+35,
+      y+20,
+      27,
+      Math.PI,
+      Math.PI*2
     );
+
+    ctx.fill();
 
   }
 
 
-  /* BODY */
+  /*
+    NECK
+  */
 
-  ctx.fillStyle="rgba(20,25,30,.8)";
+  ctx.fillStyle="#d9a078";
 
   ctx.fillRect(
-    player.x+13,
-    player.y+68,
-    50,
-    32
+    x+27,
+    y+54,
+    16,
+    13
   );
 
 
-  /* LEFT ARM */
+  /*
+    BODY / SHIRT
+  */
 
-  ctx.strokeStyle="#d6a47c";
-  ctx.lineWidth=10;
+  ctx.fillStyle="#1464a5";
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    x+12,
+    y+63,
+    46,
+    55,
+    8
+  );
+
+  ctx.fill();
+
+
+  /*
+    LEFT ARM
+  */
+
+  ctx.strokeStyle="#d9a078";
+
+  ctx.lineWidth=11;
+
   ctx.lineCap="round";
 
   ctx.beginPath();
 
   ctx.moveTo(
-    player.x+18,
-    player.y+72
+    x+15,
+    y+70
   );
 
   ctx.lineTo(
-    player.x-2,
-    player.y+91
+    x-3,
+    y+103
   );
 
   ctx.stroke();
 
 
-  /* RIGHT ARM */
+  /*
+    RIGHT ARM
+  */
 
   ctx.beginPath();
 
   ctx.moveTo(
-    player.x+58,
-    player.y+72
+    x+55,
+    y+70
   );
 
   ctx.lineTo(
-    player.x+72,
-    player.y+87
+    x+75,
+    y+90
   );
 
   ctx.stroke();
 
 
-  /* GUN */
+  /*
+    GUN
+  */
 
-  ctx.fillStyle="#20242a";
+  ctx.fillStyle="#222";
 
   ctx.fillRect(
-    player.x+61,
-    player.y+82,
-    48,
-    11
+    x+65,
+    y+85,
+    50,
+    10
   );
 
-  ctx.fillStyle="#080a0d";
+  ctx.fillStyle="#111";
 
   ctx.fillRect(
-    player.x+94,
-    player.y+84,
-    18,
+    x+105,
+    y+87,
+    20,
     6
   );
 
-  /* gun handle */
-
-  ctx.fillStyle="#16191d";
+  /* grip */
 
   ctx.save();
 
   ctx.translate(
-    player.x+70,
-    player.y+91
+    x+75,
+    y+94
   );
 
   ctx.rotate(.35);
@@ -519,42 +588,102 @@ function drawPlayer(){
   ctx.fillRect(
     0,
     0,
-    9,
-    22
+    10,
+    24
   );
 
   ctx.restore();
 
 
-  /* पैर */
+  /*
+    PANTS
+  */
 
-  ctx.strokeStyle="#111";
+  ctx.fillStyle="#202d3a";
+
+  ctx.fillRect(
+    x+15,
+    y+116,
+    40,
+    25
+  );
+
+
+  /*
+    LEFT LEG
+  */
+
+  ctx.strokeStyle="#202d3a";
+
+  ctx.lineWidth=13;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+25,
+    y+135
+  );
+
+  ctx.lineTo(
+    x+20,
+    y+166
+  );
+
+  ctx.stroke();
+
+
+  /*
+    RIGHT LEG
+  */
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+47,
+    y+135
+  );
+
+  ctx.lineTo(
+    x+53,
+    y+166
+  );
+
+  ctx.stroke();
+
+
+  /*
+    SHOES
+  */
+
+  ctx.strokeStyle="#090909";
+
   ctx.lineWidth=12;
 
   ctx.beginPath();
 
   ctx.moveTo(
-    player.x+27,
-    player.y+98
+    x+13,
+    y+166
   );
 
   ctx.lineTo(
-    player.x+23,
-    player.y+117
+    x+27,
+    y+166
   );
 
   ctx.stroke();
+
 
   ctx.beginPath();
 
   ctx.moveTo(
-    player.x+50,
-    player.y+98
+    x+48,
+    y+166
   );
 
   ctx.lineTo(
-    player.x+55,
-    player.y+117
+    x+63,
+    y+166
   );
 
   ctx.stroke();
@@ -562,65 +691,226 @@ function drawPlayer(){
 }
 
 
-/* -------------------------
-   SHOOT
-------------------------- */
+/* =====================
+   ENEMY HUMAN
+===================== */
 
-function shoot(){
+function drawEnemy(enemy){
 
-  if(!running)return;
-
-  bullets.push({
-
-    x:
-      player.x+
-      player.width+
-      30,
-
-    y:
-      player.y+85,
-
-    width:22,
-
-    height:6,
-
-    speed:13
-
-  });
+  const x=enemy.x;
+  const y=enemy.y;
 
 
-  /* muzzle flash */
+  /*
+    HEAD
+  */
 
-  for(let i=0;i<8;i++){
+  ctx.fillStyle="#c98e68";
 
-    particles.push({
+  ctx.beginPath();
 
-      x:
-        player.x+
-        player.width+
-        105,
+  ctx.arc(
+    x+25,
+    y+24,
+    20,
+    0,
+    Math.PI*2
+  );
 
-      y:
-        player.y+88,
+  ctx.fill();
 
-      vx:
-        Math.random()*5,
 
-      vy:
-        (Math.random()-.5)*5,
+  /*
+    HAIR
+  */
 
-      life:20
+  ctx.fillStyle="#222";
 
-    });
+  ctx.beginPath();
 
-  }
+  ctx.arc(
+    x+25,
+    y+18,
+    19,
+    Math.PI,
+    Math.PI*2
+  );
+
+  ctx.fill();
+
+
+  /*
+    BODY
+  */
+
+  ctx.fillStyle="#a32121";
+
+  ctx.beginPath();
+
+  ctx.roundRect(
+    x+8,
+    y+42,
+    34,
+    42,
+    7
+  );
+
+  ctx.fill();
+
+
+  /*
+    LEFT ARM
+  */
+
+  ctx.strokeStyle="#c98e68";
+
+  ctx.lineWidth=9;
+
+  ctx.lineCap="round";
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+10,
+    y+48
+  );
+
+  ctx.lineTo(
+    x-5,
+    y+75
+  );
+
+  ctx.stroke();
+
+
+  /*
+    RIGHT ARM
+  */
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+40,
+    y+48
+  );
+
+  ctx.lineTo(
+    x+53,
+    y+70
+  );
+
+  ctx.stroke();
+
+
+  /*
+    ENEMY GUN
+  */
+
+  ctx.fillStyle="#222";
+
+  ctx.fillRect(
+    x+38,
+    y+67,
+    38,
+    8
+  );
+
+
+  /*
+    PANTS
+  */
+
+  ctx.fillStyle="#292929";
+
+  ctx.fillRect(
+    x+10,
+    y+83,
+    32,
+    22
+  );
+
+
+  /*
+    LEGS
+  */
+
+  ctx.strokeStyle="#292929";
+
+  ctx.lineWidth=10;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+17,
+    y+100
+  );
+
+  ctx.lineTo(
+    x+13,
+    y+125
+  );
+
+  ctx.stroke();
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+34,
+    y+100
+  );
+
+  ctx.lineTo(
+    x+39,
+    y+125
+  );
+
+  ctx.stroke();
+
+
+  /*
+    SHOES
+  */
+
+  ctx.strokeStyle="#050505";
+
+  ctx.lineWidth=9;
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+7,
+    y+125
+  );
+
+  ctx.lineTo(
+    x+18,
+    y+125
+  );
+
+  ctx.stroke();
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    x+34,
+    y+125
+  );
+
+  ctx.lineTo(
+    x+46,
+    y+125
+  );
+
+  ctx.stroke();
 
 }
 
 
-/* -------------------------
-   ENEMY
-------------------------- */
+/* =====================
+   CREATE ENEMY
+===================== */
 
 function createEnemy(){
 
@@ -632,28 +922,87 @@ function createEnemy(){
       Math.random()*
       (canvas.width-60),
 
-    y:-70,
+    y:-150,
 
-    width:60,
+    width:55,
 
-    height:60,
+    height:130,
 
     speed:
       1.5+
-      Math.random()*2.5
+      Math.random()*2
 
   });
 
 }
 
 
-/* -------------------------
+/* =====================
+   SHOOT
+===================== */
+
+function shoot(){
+
+  if(!running)return;
+
+
+  bullets.push({
+
+    x:
+      player.x+
+      player.width+
+      50,
+
+    y:
+      player.y+88,
+
+    width:20,
+
+    height:5,
+
+    speed:13
+
+  });
+
+
+  /*
+    MUZZLE FLASH
+  */
+
+  for(let i=0;i<8;i++){
+
+    particles.push({
+
+      x:
+        player.x+
+        player.width+
+        120,
+
+      y:
+        player.y+90,
+
+      vx:
+        Math.random()*6,
+
+      vy:
+        (Math.random()-.5)*6,
+
+      life:20
+
+    });
+
+  }
+
+}
+
+
+/* =====================
    EXPLOSION
-------------------------- */
+===================== */
 
 function explosion(x,y){
 
-  for(let i=0;i<20;i++){
+  for(let i=0;i<18;i++){
 
     particles.push({
 
@@ -675,42 +1024,42 @@ function explosion(x,y){
 }
 
 
-/* -------------------------
+/* =====================
    UPDATE
-------------------------- */
+===================== */
 
 function update(){
 
-  if(left){
+  /* PLAYER */
+
+  if(leftPressed){
 
     player.x-=player.speed;
 
-    player.direction=-1;
-
   }
 
-  if(right){
+  if(rightPressed){
 
     player.x+=player.speed;
 
-    player.direction=1;
-
   }
+
 
   if(player.x<0)
     player.x=0;
 
+
   if(
     player.x+
     player.width+
-    20 >
+    30 >
     canvas.width
   ){
 
     player.x=
       canvas.width-
       player.width-
-      20;
+      30;
 
   }
 
@@ -725,7 +1074,8 @@ function update(){
 
   bullets=
     bullets.filter(
-      b=>b.x<canvas.width+100
+      b=>b.x<
+      canvas.width+100
     );
 
 
@@ -763,7 +1113,7 @@ function update(){
     i--
   ){
 
-    let enemy=enemies[i];
+    let e=enemies[i];
 
     for(
       let j=bullets.length-1;
@@ -773,30 +1123,30 @@ function update(){
 
       let b=bullets[j];
 
+
       if(
 
-        b.x <
-        enemy.x+
-        enemy.width &&
+        b.x<
+        e.x+e.width &&
 
-        b.x+b.width >
-        enemy.x &&
+        b.x+b.width>
+        e.x &&
 
-        b.y <
-        enemy.y+
-        enemy.height &&
+        b.y<
+        e.y+e.height &&
 
-        b.y+b.height >
-        enemy.y
+        b.y+b.height>
+        e.y
 
       ){
 
         explosion(
-          enemy.x+30,
-          enemy.y+30
+          e.x+25,
+          e.y+60
         );
 
         enemies.splice(i,1);
+
         bullets.splice(j,1);
 
         score+=10;
@@ -818,23 +1168,23 @@ function update(){
     i--
   ){
 
-    let e=enemies[i];
+    const e=enemies[i];
+
 
     if(
 
-      player.x <
+      player.x<
       e.x+e.width &&
 
       player.x+
-      player.width >
+      player.width>
       e.x &&
 
-      player.y <
-      e.y+
-      e.height &&
+      player.y<
+      e.y+e.height &&
 
       player.y+
-      player.height >
+      player.height>
       e.y
 
     ){
@@ -843,7 +1193,7 @@ function update(){
 
       explosion(
         player.x+35,
-        player.y+45
+        player.y+70
       );
 
       enemies.splice(i,1);
@@ -853,30 +1203,28 @@ function update(){
   }
 
 
-  /* ENEMY ESCAPED */
+  /* ENEMY REACHES GROUND */
 
   enemies=
-    enemies.filter(
-      e=>{
+    enemies.filter(e=>{
 
-        if(
-          e.y>
-          canvas.height+100
-        ){
+      if(
+        e.y>
+        canvas.height+100
+      ){
 
-          player.health-=5;
+        player.health-=5;
 
-          return false;
-
-        }
-
-        return true;
+        return false;
 
       }
-    );
+
+      return true;
+
+    });
 
 
-  hpText.textContent=
+  healthText.textContent=
     Math.max(0,player.health);
 
   scoreText.textContent=
@@ -892,92 +1240,91 @@ function update(){
 }
 
 
-/* -------------------------
-   DRAW WORLD
-------------------------- */
+/* =====================
+   BACKGROUND
+===================== */
 
-function draw(){
+function drawBackground(){
 
-  /* SKY */
-
-  const sky=
+  const gradient=
     ctx.createLinearGradient(
       0,0,
       0,canvas.height
     );
 
-  sky.addColorStop(
+  gradient.addColorStop(
     0,
-    "#061329"
+    "#061426"
   );
 
-  sky.addColorStop(
+  gradient.addColorStop(
     .65,
-    "#17496b"
+    "#174966"
   );
 
-  sky.addColorStop(
+  gradient.addColorStop(
     1,
-    "#111820"
+    "#10171c"
   );
 
-  ctx.fillStyle=sky;
+  ctx.fillStyle=gradient;
 
   ctx.fillRect(
-    0,0,
+    0,
+    0,
     canvas.width,
     canvas.height
   );
 
 
-  /* STARS */
+  /* MOON */
 
-  ctx.fillStyle="white";
+  ctx.fillStyle="#eee";
 
-  for(
-    let i=0;
-    i<45;
-    i++
-  ){
+  ctx.beginPath();
 
-    let x=
-      (i*83)%
-      canvas.width;
+  ctx.arc(
+    canvas.width-60,
+    70,
+    28,
+    0,
+    Math.PI*2
+  );
 
-    let y=
-      (i*47)%
-      (canvas.height-160);
-
-    ctx.globalAlpha=.5;
-
-    ctx.fillRect(
-      x,y,2,2
-    );
-
-  }
-
-  ctx.globalAlpha=1;
+  ctx.fill();
 
 
   /* GROUND */
 
-  ctx.fillStyle="#10161b";
+  ctx.fillStyle="#11161a";
 
   ctx.fillRect(
     0,
-    canvas.height-100,
+    canvas.height-80,
     canvas.width,
-    100
+    80
   );
+
+}
+
+
+/* =====================
+   DRAW
+===================== */
+
+function draw(){
+
+  drawBackground();
 
 
   /* BULLETS */
 
   bullets.forEach(b=>{
 
-    ctx.fillStyle="#ffd400";
+    ctx.fillStyle="#ffe000";
 
-    ctx.shadowBlur=15;
+    ctx.shadowBlur=14;
+
     ctx.shadowColor="#ffcc00";
 
     ctx.fillRect(
@@ -994,31 +1341,9 @@ function draw(){
 
   /* ENEMIES */
 
-  enemies.forEach(e=>{
-
-    ctx.fillStyle="#d92323";
-
-    ctx.beginPath();
-
-    ctx.arc(
-      e.x+30,
-      e.y+30,
-      30,
-      0,
-      Math.PI*2
-    );
-
-    ctx.fill();
-
-    ctx.font="32px Arial";
-
-    ctx.fillText(
-      "👾",
-      e.x+12,
-      e.y+40
-    );
-
-  });
+  enemies.forEach(
+    drawEnemy
+  );
 
 
   /* PARTICLES */
@@ -1028,7 +1353,7 @@ function draw(){
     ctx.globalAlpha=
       p.life/35;
 
-    ctx.fillStyle="#ffb300";
+    ctx.fillStyle="#ffae00";
 
     ctx.fillRect(
       p.x,
@@ -1042,20 +1367,23 @@ function draw(){
   ctx.globalAlpha=1;
 
 
+  /* PLAYER */
+
   drawPlayer();
 
 }
 
 
-/* -------------------------
-   GAME LOOP
-------------------------- */
+/* =====================
+   LOOP
+===================== */
 
 function loop(){
 
   if(!running)return;
 
   update();
+
   draw();
 
   requestAnimationFrame(loop);
@@ -1063,9 +1391,9 @@ function loop(){
 }
 
 
-/* -------------------------
+/* =====================
    GAME OVER
-------------------------- */
+===================== */
 
 function endGame(){
 
@@ -1076,50 +1404,62 @@ function endGame(){
   finalScore.textContent=
     score;
 
-  over.style.display="flex";
+  gameOver.style.display="flex";
 
 }
 
 
-/* -------------------------
+/* =====================
    RESTART
-------------------------- */
+===================== */
 
-document.getElementById("again")
+document.getElementById("restart")
 .onclick=function(){
 
-  over.style.display="none";
+  gameOver.style.display="none";
 
   startButton.click();
 
 };
 
 
-/* -------------------------
-   MOBILE CONTROLS
-------------------------- */
+/* =====================
+   MOBILE BUTTONS
+===================== */
 
-function hold(button,down,up){
+function holdButton(
+  element,
+  down,
+  up
+){
 
-  button.addEventListener(
+  element.addEventListener(
     "touchstart",
-    e=>{
+    function(e){
+
       e.preventDefault();
+
       down();
+
     },
     {passive:false}
   );
 
-  button.addEventListener(
+
+  element.addEventListener(
     "touchend",
-    e=>{
+    function(e){
+
       e.preventDefault();
+
       up();
+
     },
     {passive:false}
   );
 
-  button.addEventListener(
+
+  element.addEventListener(
     "touchcancel",
     up
   );
@@ -1127,38 +1467,32 @@ function hold(button,down,up){
 }
 
 
-/* LEFT */
-
-hold(
+holdButton(
 
   document.getElementById("left"),
 
-  ()=>left=true,
+  ()=>leftPressed=true,
 
-  ()=>left=false
+  ()=>leftPressed=false
 
 );
 
 
-/* RIGHT */
-
-hold(
+holdButton(
 
   document.getElementById("right"),
 
-  ()=>right=true,
+  ()=>rightPressed=true,
 
-  ()=>right=false
+  ()=>rightPressed=false
 
 );
 
-
-/* SHOOT */
 
 document.getElementById("shoot")
 .addEventListener(
   "touchstart",
-  e=>{
+  function(e){
 
     e.preventDefault();
 
@@ -1169,19 +1503,19 @@ document.getElementById("shoot")
 );
 
 
-/* -------------------------
-   COMPUTER CONTROLS
-------------------------- */
+/* =====================
+   KEYBOARD
+===================== */
 
 document.addEventListener(
   "keydown",
-  e=>{
+  function(e){
 
     if(e.key==="ArrowLeft")
-      left=true;
+      leftPressed=true;
 
     if(e.key==="ArrowRight")
-      right=true;
+      rightPressed=true;
 
     if(e.code==="Space")
       shoot();
@@ -1189,15 +1523,16 @@ document.addEventListener(
   }
 );
 
+
 document.addEventListener(
   "keyup",
-  e=>{
+  function(e){
 
     if(e.key==="ArrowLeft")
-      left=false;
+      leftPressed=false;
 
     if(e.key==="ArrowRight")
-      right=false;
+      rightPressed=false;
 
   }
 );
